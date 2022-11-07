@@ -26,16 +26,15 @@ contract MyToken is ERC20, Ownable, ERC20Burnable {
         address owner = _msgSender();
         require(isBlacklisted(owner) == false, "Blacklisted address");
 
-        uint256 fees = SafeMath.div(SafeMath.sub(SafeMath.mul(_amount, 100), SafeMath.mul(_amount, 95)), 100);
-        uint256 teamFees = SafeMath.div(SafeMath.sub(SafeMath.mul(fees, 100), SafeMath.mul(fees, 60)), 100);
-        uint256 burnFees = SafeMath.div(SafeMath.sub(SafeMath.mul(fees, 100), SafeMath.mul(fees, 80)), 100);
+        uint256 AmountWithoutFees = SafeMath.div(SafeMath.sub(SafeMath.mul(_amount, 100), SafeMath.mul(_amount, 95)), 100);
+        uint256 teamFees = SafeMath.div(SafeMath.sub(SafeMath.mul(AmountWithoutFees, 100), SafeMath.mul(AmountWithoutFees, 60)), 100);
+        uint256 burnFees = SafeMath.div(SafeMath.sub(SafeMath.mul(AmountWithoutFees, 100), SafeMath.mul(AmountWithoutFees, 80)), 100);
 
         _transfer(owner, teamAddress, teamFees);
         _transfer(owner, liquidityPoolAddress, teamFees);
         _burn(msg.sender, burnFees);
 
-        uint256 amount = SafeMath.sub(_amount, fees);
-        _transfer(owner, _to, amount);
+        _transfer(owner, _to, AmountWithoutFees);
         return true;
     }
 
