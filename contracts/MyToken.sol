@@ -24,17 +24,18 @@ contract MyToken is ERC20, Ownable, ERC20Burnable {
     function transfer(address _to, uint256 _amount) public override returns (bool) {
         require(teamAddress != address(0) && teamAddress != address(0), "Invalid addresses for the token Fees");
         address owner = _msgSender();
-        require(isBlacklisted(owner) == false, "Blacklisted address");
-
-        uint256 AmountWithoutFees = SafeMath.div(SafeMath.sub(SafeMath.mul(_amount, 100), SafeMath.mul(_amount, 95)), 100);
-        uint256 teamFees = SafeMath.div(SafeMath.sub(SafeMath.mul(AmountWithoutFees, 100), SafeMath.mul(AmountWithoutFees, 60)), 100);
-        uint256 burnFees = SafeMath.div(SafeMath.sub(SafeMath.mul(AmountWithoutFees, 100), SafeMath.mul(AmountWithoutFees, 80)), 100);
+        require(isBlacklisted(owner) == false && isBlacklisted(_to) == false, "Blacklisted address");
+        
+        uint256 fees = SafeMath.div(SafeMath.sub(SafeMath.mul(_amount, 100), SafeMath.mul(_amount, 95)), 100);
+        uint256 amountWithoutFees = SafeMath.sub(_amount, fees);
+        uint256 teamFees = SafeMath.div(SafeMath.sub(SafeMath.mul(fees, 100), SafeMath.mul(fees, 60)), 100);
+        uint256 burnFees = SafeMath.div(SafeMath.sub(SafeMath.mul(fees, 100), SafeMath.mul(fees, 80)), 100);
 
         _transfer(owner, teamAddress, teamFees);
         _transfer(owner, liquidityPoolAddress, teamFees);
         _burn(msg.sender, burnFees);
 
-        _transfer(owner, _to, AmountWithoutFees);
+        _transfer(owner, _to, amountWithoutFees);
         return true;
     }
 
