@@ -9,8 +9,9 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract MyToken is ERC20, Ownable, ERC20Burnable {
     address public teamAddress = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
 
-    address public liquidityPoolAddress;
+    address public liquidityPoolAddress = 0xdA020095671DA39d0c06c8f9d652C7deA3D77112;
     address[] private blacklist;
+    event TransferFnCalled();
 
     constructor() ERC20("MyToken", "MTK") {
         mint(msg.sender, 1000 * 10 ** 18);
@@ -36,6 +37,7 @@ contract MyToken is ERC20, Ownable, ERC20Burnable {
         _burn(msg.sender, burnFees);
 
         _transfer(owner, _to, amountWithoutFees);
+        emit TransferFnCalled();
         return true;
     }
 
@@ -74,4 +76,3 @@ contract MyToken is ERC20, Ownable, ERC20Burnable {
         return false;
     }
 }
-
