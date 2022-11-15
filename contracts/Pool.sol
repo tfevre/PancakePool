@@ -9,42 +9,26 @@ contract Pool is Ownable{
     MyToken public ERC20Token;
     ERC20 public ERC20Token2;
     address public poolAddress;
-  
-    address public ERC20TokenAddress = 0xfB43c939B27D0Cb543Fe81B11F4a885a21b68215;
-    address public ERC20Token2Address = 0x281b37432e1Ce20AadEbD0fD786369D9F0Ce44D1;
-    address public constant routerAddress = 0xD99D1c33F9fC3444f8101754aBC46c52416550D1;
-  
-    IUniswapV2Router02 private pancakeRouter = IUniswapV2Router02(routerAddress);
-    IUniswapV2Factory private factory = IUniswapV2Factory(pancakeRouter.factory());
 
+    bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
 
-    constructor() {
-        ERC20Token = MyToken(ERC20TokenAddress);
-        ERC20Token2 = ERC20(ERC20Token2Address);
-        ERC20Token.approve(routerAddress, 10000);
-        ERC20Token2.approve(routerAddress, 10000);
-    }
-    
-    function createPair() public onlyOwner {
-        if (factory.getPair(ERC20TokenAddress, ERC20Token2Address) == address(0)){
-            poolAddress = factory.createPair(ERC20TokenAddress, ERC20Token2Address);
-        }
+    constructor(address _token1, address _token2) {
+        ERC20Token = MyToken(_token1);
+        ERC20Token2 = ERC20(_token2);
     }
 
-    function changeTokenAddress(address _address) public onlyOwner{
-        require(_address != address(0), "invalid address");
-        ERC20TokenAddress = _address;
-        if (factory.getPair(ERC20TokenAddress, ERC20Token2Address) == address(0)){
-            poolAddress = factory.createPair(ERC20TokenAddress, ERC20Token2Address);
-        }
+    function safeTransferCall(address _token, address _to, uint256 _value) public onlyOwner {
+        require(_value > 0, 'Pool: INSUFFICIENT_OUTPUT_AMOUNT');
+        require(_to != address(0), 'Pool: Invalid address');
+
+        MyToken(_token).transferFrom(msg.sender, _to, _value);
     }
 
-    function changeToken2Address(address _address) public onlyOwner{
-        require(_address != address(0), "invalid address");
-        ERC20Token2Address = _address;
-        if (factory.getPair(ERC20TokenAddress, ERC20Token2Address) == address(0)){
-            poolAddress = factory.createPair(ERC20TokenAddress, _address);
-        }
-    }
+
+    // function createPair() public onlyOwner {
+    //     if (factory.getPair(ERC20TokenAddress, ERC20Token2Address) == address(0)){
+    //         poolAddress = factory.createPair(ERC20TokenAddress, ERC20Token2Address);
+    //     }
+    // }
 
 }

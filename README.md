@@ -19,3 +19,10 @@ TO Do :
 
 - Faire la fonction pour changer de token --> mais quels tokens exactement ???? exactment
 - Faire un front en localHost React pour juste changer de token et ajouter/retirer de la blacklist
+
+
+QUESTIONS :
+
+- Comment c'est possible que je me sois fait drain mes bnb test ?
+- commment faire des tests sur testnet sans payer de gas fees ?
+- Comment reproduire le swap de pancake dans un contrat le plu simple possible ?
