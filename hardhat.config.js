@@ -4,7 +4,7 @@ require('dotenv').config({ path: __dirname + '/.env' });
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.4",
-  defaultNetwork: "hardhat",
+  defaultNetwork: "bnb_testnet",
   networks: {
     hardhat: {
     },
@@ -14,5 +14,8 @@ module.exports = {
       gasPrice: 20000000000,
       accounts: [process.env.PRIVATE_KEY]
     }
-  }
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_KEY,
+  },
 };
