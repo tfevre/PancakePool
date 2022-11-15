@@ -8,9 +8,7 @@ import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 contract Pool is Ownable{
     MyToken public ERC20Token;
     ERC20 public ERC20Token2;
-    address public poolAddress;
 
-    bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
 
     constructor(address _token1, address _token2) {
         ERC20Token = MyToken(_token1);
