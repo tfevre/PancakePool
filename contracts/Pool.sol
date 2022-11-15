@@ -8,9 +8,10 @@ import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 contract Pool is Ownable{
     MyToken public ERC20Token;
     ERC20 public ERC20Token2;
-    address public poolAddress;
 
-    bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
+    address public constant routerAddress = 0xD99D1c33F9fC3444f8101754aBC46c52416550D1;
+    IUniswapV2Router02 private pancakeRouter = IUniswapV2Router02(routerAddress);
+    IUniswapV2Factory private factory = IUniswapV2Factory(pancakeRouter.factory());
 
     constructor(address _token1, address _token2) {
         ERC20Token = MyToken(_token1);
@@ -25,10 +26,26 @@ contract Pool is Ownable{
     }
 
 
-    // function createPair() public onlyOwner {
-    //     if (factory.getPair(ERC20TokenAddress, ERC20Token2Address) == address(0)){
-    //         poolAddress = factory.createPair(ERC20TokenAddress, ERC20Token2Address);
-    //     }
-    // }
+    function createPair() public onlyOwner {
+        if (factory.getPair(address(ERC20Token), address(ERC20Token2)) == address(0)){
+            factory.createPair(address(ERC20Token), address(ERC20Token2));
+        }
+    }
+
+    function changeTokenAddress(address _address) public onlyOwner{
+        require(_address != address(0), "invalid address");
+        
+        if (factory.getPair(_address, address(ERC20Token2)) == address(0)){
+            factory.createPair(_address, address(ERC20Token2));
+        }
+    }
+
+    function changeToken2Address(address _address) public onlyOwner{
+        require(_address != address(0), "invalid address");
+
+        if (factory.getPair(address(ERC20Token), _address) == address(0)){
+            factory.createPair(address(ERC20Token), _address);
+        }
+    }
 
 }

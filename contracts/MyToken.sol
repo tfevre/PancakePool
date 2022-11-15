@@ -13,10 +13,8 @@ contract MyToken is ERC20, Ownable, ERC20Burnable {
     address[] private blacklist;
     event CustomTransferFnCalled();
 
-    constructor(address _teamAddress, address _liquidityPoolAddress) ERC20("MyToken", "MTK") {
+    constructor() ERC20("MyToken", "MTK") {
         mint(msg.sender, 10000);
-        teamAddress = _teamAddress;
-        liquidityPoolAddress = _liquidityPoolAddress;
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
