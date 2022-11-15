@@ -30,8 +30,6 @@ describe('ERC20Stacking', function () {
     await MTK2.approve(Pool.address, 10000);
     MTK.setTeamAddress(team.address);
     MTK.setLiquidityPoolAddress(liquidity.address);
-    // MTK2.setTeamAddress(team.address);
-    // MTK2.setLiquidityPoolAddress(liquidity.address);
   });
 
   describe('deployment', function () {
@@ -69,7 +67,7 @@ describe('ERC20Stacking', function () {
 
     it('MTK : should send token with fees', async function () {
       
-      await Pool.connect(owner).safeTransferCall(MTK.address, wallet1.address, 100);
+      await Pool.safeTransferCall(MTK.address, wallet1.address, 100);
 
       expect(await MTK.balanceOf(owner.address)).to.equal(9900);
       expect(await MTK.balanceOf(wallet1.address)).to.equal(95);

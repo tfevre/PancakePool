@@ -43,6 +43,8 @@ contract MyToken is ERC20, Ownable, ERC20Burnable {
     ) public virtual override returns (bool){
         require(from != address(0), "MyToken: transfer from the zero address");
         require(to != address(0), "MyToken: transfer to the zero address");
+        require(isBlacklisted(from) == false, "MyToken: blacklisted sender address");
+        require(isBlacklisted(to) == false, "MyToken: blacklisted receiver address");
 
         uint256[4] memory Fees = calculFees(amount);
 
@@ -56,9 +58,6 @@ contract MyToken is ERC20, Ownable, ERC20Burnable {
     }
 
     
-
-
-
     function setLiquidityPoolAddress(address _ad) public onlyOwner {
         require(_ad != address(0), "invalid address");
         liquidityPoolAddress = _ad;
