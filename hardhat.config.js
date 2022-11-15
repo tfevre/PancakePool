@@ -1,4 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
+require('dotenv').config({ path: __dirname + '/.env' });
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       chainId: 97,
       gasPrice: 20000000000,
-      accounts: ["fedf5665f0bdd2a03766afe485a5d14f03f13d1c1692bea03a64982f811f5579"]
+      accounts: [process.env.PRIVATE_KEY]
     }
   }
 };
